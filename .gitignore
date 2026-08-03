@@ -1,0 +1,30 @@
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+**/credentials/
+**/*auth*store*/
+**/*token*
+**/*secret*
+
+# OpenClaw session/runtime caches
+**/sessions/
+**/session-cache/
+**/*session*.jsonl
+**/*.jsonl
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+
+# Logs and transient runtime output
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# Local/editor/OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
