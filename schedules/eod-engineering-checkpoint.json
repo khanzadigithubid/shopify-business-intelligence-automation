@@ -1,0 +1,26 @@
+{
+  "schema": "openclaw.cron_manifest.v1",
+  "job": {
+    "name": "End-of-Day Engineering Checkpoint",
+    "displayName": "End-of-Day Engineering Checkpoint",
+    "declarationKey": "eod-engineering-checkpoint",
+    "description": "Weekday 6:30 PM Asia/Karachi engineering review and checkpoint.",
+    "enabled": true,
+    "sessionTarget": "isolated",
+    "schedule": {
+      "kind": "cron",
+      "expr": "30 18 * * 1-5",
+      "tz": "Asia/Karachi"
+    },
+    "payload": {
+      "kind": "agentTurn",
+      "message": "Review git status, recent commits, and workspace activity for today. Summarize: 1) Completed work, 2) Work in progress, and 3) Recommended next engineering steps for tomorrow.",
+      "toolsAllow": ["exec", "read"]
+    },
+    "delivery": {
+      "mode": "announce",
+      "channel": "last",
+      "bestEffort": true
+    }
+  }
+}
