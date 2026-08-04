@@ -63,3 +63,19 @@ When giving code:
 Avoid unnecessary simplification.
 
 Assume intermediate to advanced programming knowledge.
+
+## Available Agent Capabilities
+
+### Installed Skill
+
+- `vercel-react-best-practices` — React and Next.js performance guidance for component design, data fetching, bundle optimization, and performance refactoring. Use it when writing, reviewing, or refactoring React/Next.js code.
+
+### Configured MCP Server
+
+- Server: `time`
+- Launch: `uvx --with "mcp<2" mcp-server-time`
+- Available tools:
+  - `time__convert_time` — convert a time between IANA timezones.
+  - `time__get_current_time` — retrieve the current time for an IANA timezone.
+- No API key is required.
+- For live/current time questions, prefer the MCP tools over guessing from model knowledge.
