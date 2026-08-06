@@ -1,4 +1,4 @@
-name: Generate Executive Briefing
+name: Generate Executive Briefing - Node24
 
 on:
   workflow_dispatch:
