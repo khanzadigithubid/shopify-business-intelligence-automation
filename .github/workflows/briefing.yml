@@ -71,7 +71,27 @@ jobs:
           PY
 
       - name: Generate briefing
-        run: python workspace_briefing.py
+        id: briefing
+        shell: bash
+        run: |
+          set -o pipefail
+          python -u workspace_briefing.py 2>&1 | tee briefing-error.log
+
+      - name: Add diagnostic details to workflow summary
+        if: ${{ failure() }}
+        shell: bash
+        run: |
+          {
+            echo "## Executive briefing failure details"
+            echo
+            echo '```text'
+            if [ -f briefing-error.log ]; then
+              cat briefing-error.log
+            else
+              echo "The failure occurred before the briefing script started. Expand the failed setup step above."
+            fi
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Commit generated briefing
         run: |
