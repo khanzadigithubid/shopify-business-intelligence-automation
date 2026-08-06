@@ -7,13 +7,16 @@ then generates a clean executive briefing markdown file.
 import os
 import json
 import datetime
+from pathlib import Path
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
-SECRETS_DIR = os.path.expanduser(r"~\.openclaw\secrets")
-TOKEN_PATH = os.path.join(SECRETS_DIR, "google-workspace-token.json")
-OUTPUT_DIR = os.path.expanduser(r"~\.openclaw\workspace\briefings")
+# Use platform-independent paths so the same workflow works locally on
+# Windows and on GitHub-hosted Linux runners.
+SECRETS_DIR = Path.home() / ".openclaw" / "secrets"
+TOKEN_PATH = SECRETS_DIR / "google-workspace-token.json"
+OUTPUT_DIR = Path(__file__).resolve().parent / "briefings"
 
 SCOPES = [
     'https://www.googleapis.com/auth/calendar.readonly',
@@ -22,11 +25,14 @@ SCOPES = [
 ]
 
 def get_credentials():
-    if not os.path.exists(TOKEN_PATH):
+    if not TOKEN_PATH.exists():
         raise FileNotFoundError(f"OAuth token not found at {TOKEN_PATH}. Run bootstrap script first.")
-    
-    creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
-    if creds and creds.expired and creds.refresh_token:
+
+    creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
+    # Always refresh when a refresh token is available. Access tokens normally
+    # expire after about one hour, and the token file used by CI may not contain
+    # an expiry timestamp. This keeps scheduled GitHub Actions runs reliable.
+    if creds and creds.refresh_token:
         creds.refresh(Request())
     return creds
 
@@ -69,7 +75,7 @@ def fetch_drive_files(service):
         return [{"name": f"Error fetching drive files: {str(e)}"}]
 
 def generate_briefing():
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     creds = get_credentials()
     
     cal_service = build('calendar', 'v3', credentials=creds)
@@ -109,7 +115,7 @@ Generated: {today_str}
         markdown += "- No recent files found.\n"
 
     filename = datetime.datetime.now().strftime("briefing-%Y-%m-%d.md")
-    filepath = os.path.join(OUTPUT_DIR, filename)
+    filepath = OUTPUT_DIR / filename
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(markdown)
         

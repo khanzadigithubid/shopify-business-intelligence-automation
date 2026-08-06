@@ -40,5 +40,26 @@ The **Google Workspace Briefing Workflow** (`workspace_briefing.py`) is an autom
 - `google_workspace_oauth.py`: Manages secure OAuth authentication and token lifecycle.
 - `test_google_workspace.py`: Validates API scopes and connectivity across Calendar, Gmail, and Drive services.
 
+### GitHub Actions Automation
+
+The repository includes `.github/workflows/briefing.yml`. It can be started manually from the **Actions** tab or runs automatically every day at **06:00 Asia/Karachi**. The workflow:
+
+1. Creates a clean Python environment on GitHub-hosted infrastructure.
+2. Loads Google OAuth values from GitHub Actions Secrets without committing them to the repository.
+3. Refreshes the Google access token using the read-only refresh token.
+4. Fetches Calendar, Gmail, and Drive data through the official APIs.
+5. Saves the generated report under `briefings/` and commits only that report back to GitHub.
+
+Required repository secrets under **Settings → Secrets and variables → Actions**:
+
+| Secret name | Value source |
+| --- | --- |
+| `GOOGLE_CLIENT_ID` | `client_id` in `google-workspace-token.json` |
+| `GOOGLE_CLIENT_SECRET` | `client_secret` in `google-workspace-token.json` |
+| `GOOGLE_ACCESS_TOKEN` | `token` in `google-workspace-token.json` |
+| `GOOGLE_REFRESH_TOKEN` | `refresh_token` in `google-workspace-token.json` |
+
+The access token is short-lived; the refresh token is what makes scheduled runs continue working. Never commit either token or the client secret to GitHub source files.
+
 ---
 *Managed by OpenClaw & ClawForge*
