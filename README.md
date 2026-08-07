@@ -13,19 +13,19 @@ This repository contains the backup of the personal AI Agent workspace and confi
 ## Repository Structure
 
 ```text
-├── .agents/            # Agent skills and extensions
-├── memory/             # Daily engineering logs and notes
-├── briefings/          # Generated executive workspace briefings
-├── schedules/          # Task and cron manifests
-├── AGENTS.md           # Workspace operating instructions
-├── IDENTITY.md         # Agent identity & role definition
-├── MEMORY.md           # Curated long-term memory & standing preferences
-├── SOUL.md             # Persona, tone, and core principles
-├── TOOLS.md            # Local environment notes & tool configurations
-├── USER.md             # Developer profile & primary technology stack
-├── google_workspace_oauth.py # Google Workspace OAuth utility & authentication flow
-├── test_google_workspace.py  # API connectivity verification suite
-└── workspace_briefing.py     # Automated Google Workspace Executive Briefing generator
+.agents/            # Agent skills and extensions
+memory/             # Daily engineering logs and notes
+briefings/          # Generated executive workspace briefings
+schedules/          # Task and cron manifests
+AGENTS.md           # Workspace operating instructions
+IDENTITY.md         # Agent identity & role definition
+MEMORY.md           # Curated long-term memory & standing preferences
+SOUL.md             # Persona, tone, and core principles
+TOOLS.md            # Local environment notes & tool configurations
+USER.md             # Developer profile & primary technology stack
+google_workspace_oauth.py # Google Workspace OAuth utility & authentication flow
+test_google_workspace.py  # API connectivity verification suite
+workspace_briefing.py     # Automated Google Workspace Executive Briefing generator
 ```
 
 ## Google Workspace Briefing Workflow
@@ -36,7 +36,7 @@ The **Google Workspace Briefing Workflow** (`workspace_briefing.py`) is an autom
 
 - **Automation:** Enabled through GitHub Actions
 - **Schedule:** Daily at **06:00 AM Pakistan Standard Time (PKT)**
-- **Manual execution:** Available through **Actions → Generate Executive Briefing - Node24 → Run workflow**
+- **Manual execution:** Available through **Actions -> Generate Executive Briefing - Node24 -> Run workflow**
 - **Output:** `briefings/briefing-YYYY-MM-DD.md`
 - **Runtime:** Python 3.12 on GitHub-hosted Ubuntu
 - **Google permissions:** Calendar, Gmail, and Drive **read-only** scopes
@@ -71,7 +71,7 @@ flowchart LR
 5. A `briefings/briefing-YYYY-MM-DD.md` report is generated.
 6. GitHub Actions automatically commits and pushes the report to the repository.
 
-You do not need to run the script manually every day. Open the repository's `briefings/` folder to view the latest report. To generate a fresh report immediately, use **Actions → Generate Executive Briefing - Node24 → Run workflow**.
+You do not need to run the script manually every day. Open the repository's `briefings/` folder to view the latest report. To generate a fresh report immediately, use **Actions -> Generate Executive Briefing - Node24 -> Run workflow**.
 
 ### Key Features
 - **Google Calendar Integration**: Fetches upcoming scheduled events to highlight key meetings and time-bound commitments.
@@ -98,7 +98,7 @@ The workflow:
 
 GitHub may start scheduled workflows a few minutes late during periods of high platform load. The workflow is not instant event streaming; it creates a fresh report on each scheduled or manual run.
 
-Required repository secrets under **Settings → Secrets and variables → Actions**:
+Required repository secrets under **Settings -> Secrets and variables -> Actions**:
 
 | Secret name | Value source |
 | --- | --- |
@@ -127,7 +127,7 @@ C:\Users\DELL\.openclaw\secrets\google-workspace-token.json
 ### Troubleshooting
 
 - **Workflow does not appear:** Confirm `.github/workflows/briefing.yml` exists on the `master` branch and refresh the Actions page.
-- **Missing secrets:** Add all four required values under **Settings → Secrets and variables → Actions → Repository secrets**. Names must match exactly.
+- **Missing secrets:** Add all four required values under **Settings -> Secrets and variables -> Actions -> Repository secrets**. Names must match exactly.
 - **OAuth `invalid_grant`:** Generate a new read-only refresh token with `google_workspace_oauth.py` and replace `GOOGLE_REFRESH_TOKEN`.
 - **No new report:** Open the latest workflow run and inspect the failed step. The workflow also writes diagnostic details to the run summary.
 - **Schedule timing:** GitHub Actions schedules use UTC and can be delayed slightly; the configured target is 06:00 PKT.
