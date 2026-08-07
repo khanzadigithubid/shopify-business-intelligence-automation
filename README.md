@@ -1,6 +1,6 @@
 # AI Employee Workspace Backup
 
-[![Generate Executive Briefing](https://github.com/khanzadigithubid/ai-employee-workspace-backup/actions/workflows/briefing.yml/badge.svg)](https://github.com/khanzadigithubid/ai-employee-workspace-backup/actions/workflows/briefing.yml)
+[![Generate Executive Briefing - Node24](https://github.com/khanzadigithubid/ai-employee-workspace-backup/actions/workflows/briefing.yml/badge.svg?branch=master)](https://github.com/khanzadigithubid/ai-employee-workspace-backup/actions/workflows/briefing.yml)
 
 This repository contains the backup of the personal AI Agent workspace and configuration for **ClawForge** (Senior AI Engineering Partner) running inside **OpenClaw**.
 
@@ -44,6 +44,23 @@ The **Google Workspace Briefing Workflow** (`workspace_briefing.py`) is an autom
 ### Workflow Kaise Kaam Karta Hai
 
 Yeh workflow GitHub Actions par khud-ba-khud run hota hai. Har roz 06:00 AM PKT par GitHub ek temporary Ubuntu machine start karta hai, project code checkout karta hai, Google APIs se fresh data read karta hai, aur nayi briefing report GitHub ke `briefings/` folder mein save karta hai.
+
+```mermaid
+flowchart LR
+    A[GitHub Schedule<br/>06:00 AM PKT] --> B[Ubuntu Runner]
+    M[Manual Run] --> B
+    B --> C[Load GitHub Secrets]
+    C --> D[Refresh OAuth Token]
+    D --> E[Google APIs]
+    E --> E1[Calendar]
+    E --> E2[Gmail]
+    E --> E3[Drive]
+    E1 --> F[Generate Markdown Briefing]
+    E2 --> F
+    E3 --> F
+    F --> G[briefings/]
+    G --> H[Commit Report to GitHub]
+```
 
 **Automatic flow:**
 
