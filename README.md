@@ -41,9 +41,9 @@ The **Google Workspace Briefing Workflow** (`workspace_briefing.py`) is an autom
 - **Runtime:** Python 3.12 on GitHub-hosted Ubuntu
 - **Google permissions:** Calendar, Gmail, and Drive **read-only** scopes
 
-### Workflow Kaise Kaam Karta Hai
+### How the Workflow Works
 
-Yeh workflow GitHub Actions par khud-ba-khud run hota hai. Har roz 06:00 AM PKT par GitHub ek temporary Ubuntu machine start karta hai, project code checkout karta hai, Google APIs se fresh data read karta hai, aur nayi briefing report GitHub ke `briefings/` folder mein save karta hai.
+This workflow runs automatically on GitHub Actions. Every day at 06:00 AM PKT, GitHub starts a temporary Ubuntu runner, checks out the project code, reads fresh data from the Google APIs, and saves a new briefing report in the repository's `briefings/` folder.
 
 ```mermaid
 flowchart LR
@@ -64,14 +64,14 @@ flowchart LR
 
 **Automatic flow:**
 
-1. GitHub Actions scheduled workflow start karta hai.
-2. Python environment aur required Google API packages install hote hain.
-3. GitHub Secrets se OAuth credentials securely load hote hain; credentials source code mein save nahi hote.
-4. Google Calendar ke upcoming events, Gmail ke unread messages, aur Drive ki recently modified files fetch hoti hain.
-5. `briefings/briefing-YYYY-MM-DD.md` report generate hoti hai.
-6. GitHub Actions report ko automatically commit karke repository mein push karta hai.
+1. GitHub Actions starts the scheduled workflow.
+2. A Python environment and the required Google API packages are installed.
+3. OAuth credentials are loaded securely from GitHub Secrets; credentials are never stored in the source code.
+4. Upcoming Google Calendar events, unread Gmail messages, and recently modified Drive files are fetched.
+5. A `briefings/briefing-YYYY-MM-DD.md` report is generated.
+6. GitHub Actions automatically commits and pushes the report to the repository.
 
-Iska matlab hai ke aapko roz manually script run karne ki zaroorat nahi. Latest report dekhne ke liye repository ke `briefings/` folder ko open karein. Fresh report foran chahiye ho to **Actions → Generate Executive Briefing - Node24 → Run workflow** se manual run kar sakte hain.
+You do not need to run the script manually every day. Open the repository's `briefings/` folder to view the latest report. To generate a fresh report immediately, use **Actions → Generate Executive Briefing - Node24 → Run workflow**.
 
 ### Key Features
 - **Google Calendar Integration**: Fetches upcoming scheduled events to highlight key meetings and time-bound commitments.
