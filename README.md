@@ -41,6 +41,21 @@ The **Google Workspace Briefing Workflow** (`workspace_briefing.py`) is an autom
 - **Runtime:** Python 3.12 on GitHub-hosted Ubuntu
 - **Google permissions:** Calendar, Gmail, and Drive **read-only** scopes
 
+### Workflow Kaise Kaam Karta Hai
+
+Yeh workflow GitHub Actions par khud-ba-khud run hota hai. Har roz 06:00 AM PKT par GitHub ek temporary Ubuntu machine start karta hai, project code checkout karta hai, Google APIs se fresh data read karta hai, aur nayi briefing report GitHub ke `briefings/` folder mein save karta hai.
+
+**Automatic flow:**
+
+1. GitHub Actions scheduled workflow start karta hai.
+2. Python environment aur required Google API packages install hote hain.
+3. GitHub Secrets se OAuth credentials securely load hote hain; credentials source code mein save nahi hote.
+4. Google Calendar ke upcoming events, Gmail ke unread messages, aur Drive ki recently modified files fetch hoti hain.
+5. `briefings/briefing-YYYY-MM-DD.md` report generate hoti hai.
+6. GitHub Actions report ko automatically commit karke repository mein push karta hai.
+
+Iska matlab hai ke aapko roz manually script run karne ki zaroorat nahi. Latest report dekhne ke liye repository ke `briefings/` folder ko open karein. Fresh report foran chahiye ho to **Actions → Generate Executive Briefing - Node24 → Run workflow** se manual run kar sakte hain.
+
 ### Key Features
 - **Google Calendar Integration**: Fetches upcoming scheduled events to highlight key meetings and time-bound commitments.
 - **Gmail Integration**: Scans unread messages to surface urgent communications and sender details.
