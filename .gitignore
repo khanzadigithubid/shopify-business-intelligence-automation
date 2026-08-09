@@ -16,6 +16,10 @@
 **/*.sqlite3
 **/*.db
 
+# Python caches and transient runtime output
+**/__pycache__/
+*.py[cod]
+
 # Logs and transient runtime output
 *.log
 logs/
