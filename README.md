@@ -1,142 +1,236 @@
-# AI Employee Workspace Backup
+# Shopify Business Intelligence Automation
 
-[![Generate Executive Briefing - Node24](https://github.com/khanzadigithubid/ai-employee-workspace-backup/actions/workflows/briefing.yml/badge.svg?branch=master)](https://github.com/khanzadigithubid/ai-employee-workspace-backup/actions/workflows/briefing.yml)
+[![Generate Shopify Business Report](https://github.com/khanzadigithubid/shopify-business-intelligence-automation/actions/workflows/shopify-report.yml/badge.svg?branch=master)](https://github.com/khanzadigithubid/shopify-business-intelligence-automation/actions/workflows/shopify-report.yml)
 
-This repository contains the backup of the personal AI Agent workspace and configuration for **ClawForge** (Senior AI Engineering Partner) running inside **OpenClaw**.
+A read-only Shopify business intelligence workflow that generates a daily Markdown report from Shopify order and inventory data. It calculates operational metrics, highlights low-stock products, and can optionally use an OpenAI-compatible model for aggregate business analysis.
 
-## Purpose
+> **Privacy-first:** The workflow does not request or report customer names, email addresses, shipping addresses, or message content. Reports contain aggregate metrics and product names only.
 
-- **Continuity**: Preserves standing preferences, custom system prompts, developer profile, and memory across agent sessions.
-- **Automation & Scheduling**: Stores schedule manifests and task hooks.
-- **Integration Scripts & Automations**: Houses helper scripts and automated workflows (e.g., Google Workspace OAuth setup, API testing, and Executive Briefing generation).
+## What it does
 
-## Repository Structure
+- Fetches orders for a selected local business day through the Shopify Admin GraphQL API.
+- Fetches the current product inventory snapshot.
+- Excludes cancelled orders from sales and order metrics.
+- Calculates sales, order count, average order value, fulfilment count, and cancelled orders.
+- Lists the top products by units sold.
+- Flags active products at or below the configured low-stock threshold.
+- Uses deterministic analysis by default.
+- Optionally sends aggregate metrics only to an OpenAI-compatible API such as OpenRouter.
+- Generates `shopify_reports/shopify-report-YYYY-MM-DD.md`.
+- Runs automatically through GitHub Actions and commits changed reports back to this repository.
+
+## Architecture
 
 ```text
-.agents/            # Agent skills and extensions
-memory/             # Daily engineering logs and notes
-briefings/          # Generated executive workspace briefings
-schedules/          # Task and cron manifests
-AGENTS.md           # Workspace operating instructions
-IDENTITY.md         # Agent identity & role definition
-MEMORY.md           # Curated long-term memory & standing preferences
-SOUL.md             # Persona, tone, and core principles
-TOOLS.md            # Local environment notes & tool configurations
-USER.md             # Developer profile & primary technology stack
-google_workspace_oauth.py # Google Workspace OAuth utility & authentication flow
-test_google_workspace.py  # API connectivity verification suite
-workspace_briefing.py     # Automated Google Workspace Executive Briefing generator
+GitHub Actions schedule or manual run
+                |
+                v
+       Python 3.12 application
+                |
+                v
+  Shopify Admin GraphQL API (read-only)
+                |
+                +--> Orders for the report date
+                +--> Current product inventory
+                |
+                v
+       Metrics and business analysis
+                |
+                +--> Deterministic rules
+                +--> Optional aggregate AI analysis
+                |
+                v
+   shopify_reports/shopify-report-YYYY-MM-DD.md
+                |
+                v
+       Git commit and push by Actions
 ```
 
-## Google Workspace Briefing Workflow
+## Repository structure
 
-The **Google Workspace Briefing Workflow** (`workspace_briefing.py`) is an automated, read-only integration that consolidates key daily activities and productivity data from Google Workspace into a single executive markdown briefing.
-
-### Current Status
-
-- **Automation:** Enabled through GitHub Actions
-- **Schedule:** Daily at **06:00 AM Pakistan Standard Time (PKT)**
-- **Manual execution:** Available through **Actions -> Generate Executive Briefing - Node24 -> Run workflow**
-- **Output:** `briefings/briefing-YYYY-MM-DD.md`
-- **Runtime:** Python 3.12 on GitHub-hosted Ubuntu
-- **Google permissions:** Calendar, Gmail, and Drive **read-only** scopes
-
-### How the Workflow Works
-
-This workflow runs automatically on GitHub Actions. Every day at 06:00 AM PKT, GitHub starts a temporary Ubuntu runner, checks out the project code, reads fresh data from the Google APIs, and saves a new briefing report in the repository's `briefings/` folder.
-
-```mermaid
-flowchart LR
-    A[GitHub Schedule<br/>06:00 AM PKT] --> B[Ubuntu Runner]
-    M[Manual Run] --> B
-    B --> C[Load GitHub Secrets]
-    C --> D[Refresh OAuth Token]
-    D --> E[Google APIs]
-    E --> E1[Calendar]
-    E --> E2[Gmail]
-    E --> E3[Drive]
-    E1 --> F[Generate Markdown Briefing]
-    E2 --> F
-    E3 --> F
-    F --> G[briefings/]
-    G --> H[Commit Report to GitHub]
+```text
+.github/workflows/shopify-report.yml  # Scheduled and manual GitHub Actions workflow
+shopify_automation/                   # Python package
+  analyzer.py                         # Metrics and optional AI analysis
+  config.py                           # Environment configuration
+  demo_data.py                         # Local demo snapshot
+  main.py                              # CLI and report orchestration
+  models.py                            # Typed data models
+  report.py                            # Markdown report renderer
+  shopify_client.py                    # Read-only Shopify GraphQL client
+  requirements.txt                     # Python dependencies
+  test_automation.py                   # Unit tests
+shopify_reports/                      # Generated Markdown reports
 ```
 
-**Automatic flow:**
+## GitHub Actions workflow
 
-1. GitHub Actions starts the scheduled workflow.
-2. A Python environment and the required Google API packages are installed.
-3. OAuth credentials are loaded securely from GitHub Secrets; credentials are never stored in the source code.
-4. Upcoming Google Calendar events, unread Gmail messages, and recently modified Drive files are fetched.
-5. A `briefings/briefing-YYYY-MM-DD.md` report is generated.
-6. GitHub Actions automatically commits and pushes the report to the repository.
+The workflow is defined in `.github/workflows/shopify-report.yml`.
 
-You do not need to run the script manually every day. Open the repository's `briefings/` folder to view the latest report. To generate a fresh report immediately, use **Actions -> Generate Executive Briefing - Node24 -> Run workflow**.
+- **Schedule:** Daily at 07:00 Pakistan Standard Time (PKT).
+- **Cron:** `0 2 * * *` UTC, because GitHub Actions cron uses UTC.
+- **Manual run:** Open **Actions → Generate Shopify Business Report → Run workflow**.
+- **Manual date:** An optional `YYYY-MM-DD` date can be provided when starting a run.
+- **Runtime:** Python 3.12 on an Ubuntu GitHub-hosted runner.
+- **Permissions:** `contents: write`, required only so the workflow can commit generated reports.
+- **Concurrency:** Only one report generation run is allowed at a time.
 
-### Key Features
-- **Google Calendar Integration**: Fetches upcoming scheduled events to highlight key meetings and time-bound commitments.
-- **Gmail Integration**: Scans unread messages to surface urgent communications and sender details.
-- **Google Drive Integration**: Retrieves recently modified files for quick access and tracking.
-- **Executive Output**: Generates cleanly formatted markdown reports saved directly to the `briefings/` directory with timestamps.
+The normal scheduled run uses yesterday's date in `REPORT_TIMEZONE`, preventing a partial report for the current day.
 
-### Utility Scripts
-- `google_workspace_oauth.py`: Manages secure OAuth authentication and token lifecycle.
-- `test_google_workspace.py`: Validates API scopes and connectivity across Calendar, Gmail, and Drive services.
+## Configuration
 
-### GitHub Actions Automation
+Add the following under **Settings → Secrets and variables → Actions**.
 
-The repository includes `.github/workflows/briefing.yml`. It can be started manually from the **Actions** tab or runs automatically every day at **06:00 AM PKT**. GitHub Actions cron uses UTC, so the configured schedule is `0 1 * * *`.
+### Required repository secrets
 
-The workflow:
-
-1. Creates a clean Python 3.12 environment on GitHub-hosted Ubuntu.
-2. Loads Google OAuth values from GitHub Actions Secrets without committing them to the repository.
-3. Refreshes the short-lived Google access token using the read-only refresh token.
-4. Fetches Calendar, Gmail, and Drive data through the official APIs.
-5. Saves the generated report under `briefings/`.
-6. Commits and pushes only the generated briefing back to the repository.
-
-GitHub may start scheduled workflows a few minutes late during periods of high platform load. The workflow is not instant event streaming; it creates a fresh report on each scheduled or manual run.
-
-Required repository secrets under **Settings -> Secrets and variables -> Actions**:
-
-| Secret name | Value source |
+| Name | Purpose |
 | --- | --- |
-| `GOOGLE_CLIENT_ID` | `client_id` in `google-workspace-token.json` |
-| `GOOGLE_CLIENT_SECRET` | `client_secret` in `google-workspace-token.json` |
-| `GOOGLE_ACCESS_TOKEN` | `token` in `google-workspace-token.json` |
-| `GOOGLE_REFRESH_TOKEN` | `refresh_token` in `google-workspace-token.json` |
+| `SHOPIFY_STORE_DOMAIN` | Store domain, for example `your-store.myshopify.com` |
+| `SHOPIFY_ACCESS_TOKEN` | Shopify Admin API access token |
 
-The access token is short-lived; the refresh token is what makes scheduled runs continue working. Never commit either token or the client secret to GitHub source files.
+### Optional repository secrets
 
-### Running Locally
+| Name | Purpose |
+| --- | --- |
+| `AI_API_KEY` | Enables optional aggregate AI analysis |
 
-Install the required packages and run the briefing script from the repository root:
+### Optional repository variables
+
+| Name | Default | Purpose |
+| --- | --- | --- |
+| `SHOPIFY_API_VERSION` | `2025-10` | Shopify Admin API version |
+| `AI_BASE_URL` | `https://openrouter.ai/api/v1` | OpenAI-compatible API base URL |
+| `AI_MODEL` | `openai/gpt-4o-mini` | Model used for aggregate analysis |
+| `REPORT_TIMEZONE` | `Asia/Karachi` | Local timezone used for report dates |
+| `LOW_STOCK_THRESHOLD` | `10` | Inventory level at or below which products are flagged |
+
+The Shopify custom app should have only the read scopes needed for shop information, orders, products, and inventory. Never commit tokens, `.env` files, OAuth credentials, or API keys.
+
+## Run locally
+
+### 1. Create an environment
 
 ```bash
-python -m pip install google-api-python-client google-auth-oauthlib google-auth-httplib2 requests
-python workspace_briefing.py
+python -m venv .venv
 ```
 
-The local token must be available at:
+Windows PowerShell:
 
-```text
-C:\Users\DELL\.openclaw\secrets\google-workspace-token.json
+```powershell
+.venv\Scripts\Activate.ps1
 ```
 
-### Troubleshooting
+Linux/macOS:
 
-- **Workflow does not appear:** Confirm `.github/workflows/briefing.yml` exists on the `master` branch and refresh the Actions page.
-- **Missing secrets:** Add all four required values under **Settings -> Secrets and variables -> Actions -> Repository secrets**. Names must match exactly.
-- **OAuth `invalid_grant`:** Generate a new read-only refresh token with `google_workspace_oauth.py` and replace `GOOGLE_REFRESH_TOKEN`.
-- **No new report:** Open the latest workflow run and inspect the failed step. The workflow also writes diagnostic details to the run summary.
-- **Schedule timing:** GitHub Actions schedules use UTC and can be delayed slightly; the configured target is 06:00 PKT.
+```bash
+source .venv/bin/activate
+```
 
-### Security Notes
+### 2. Install dependencies
 
-- OAuth credentials are stored only in GitHub Actions Secrets and are never committed to this repository.
-- The workflow requests and uses read-only Google scopes.
-- Generated reports may contain private calendar, email, and Drive metadata. Keep the repository private if the reports should not be public.
+```bash
+python -m pip install -r shopify_automation/requirements.txt
+```
+
+### 3. Configure Shopify credentials
+
+PowerShell:
+
+```powershell
+$env:SHOPIFY_STORE_DOMAIN = "your-store.myshopify.com"
+$env:SHOPIFY_ACCESS_TOKEN = "your-read-only-token"
+$env:REPORT_TIMEZONE = "Asia/Karachi"
+$env:LOW_STOCK_THRESHOLD = "10"
+```
+
+Linux/macOS:
+
+```bash
+export SHOPIFY_STORE_DOMAIN="your-store.myshopify.com"
+export SHOPIFY_ACCESS_TOKEN="your-read-only-token"
+export REPORT_TIMEZONE="Asia/Karachi"
+export LOW_STOCK_THRESHOLD="10"
+```
+
+### 4. Generate a live report
+
+```bash
+python -m shopify_automation --output-dir shopify_reports
+```
+
+By default, the command reports on yesterday in the configured timezone. To generate a specific report date:
+
+```bash
+python -m shopify_automation \
+  --report-date 2026-08-09 \
+  --output-dir shopify_reports
+```
+
+### 5. Run the demo without Shopify credentials
+
+```bash
+python -m shopify_automation \
+  --demo \
+  --report-date 2026-08-09 \
+  --output-dir shopify_reports
+```
+
+Demo mode uses local sample data and is never enabled by the production GitHub Actions workflow.
+
+## Optional AI analysis
+
+AI analysis is disabled unless `AI_API_KEY` is configured. When enabled, the application sends only aggregate values:
+
+- Order count
+- Sales total and currency
+- Average order value
+- Fulfilled and cancelled order counts
+- Top product names and quantities
+- Low-stock product names
+
+The model is instructed to return short JSON arrays for highlights, recommendations, and risks. If the AI request fails or returns invalid data, the workflow safely falls back to deterministic analysis.
+
+## Test locally
+
+Run the package tests from the repository root:
+
+```bash
+python -m unittest shopify_automation.test_automation -v
+```
+
+The tests cover cancelled-order exclusion, aggregate report content, and low-stock alerts.
+
+## Report output
+
+Generated reports include:
+
+- Executive summary
+- Sales and order metrics
+- Average order value
+- Fulfilment and cancellation counts
+- Top products by units sold
+- Low-stock alerts
+- Operational recommendations
+- Risks requiring review
+- Report scope and data-access notes
+
+Example output: [`shopify_reports/shopify-report-2026-08-09.md`](shopify_reports/shopify-report-2026-08-09.md)
+
+## Security and privacy
+
+- Shopify access is read-only at the application level.
+- Customer PII is not requested by the GraphQL queries.
+- Secrets are loaded through environment variables or GitHub Actions Secrets.
+- Generated reports are committed to the public repository by design; review report contents before enabling public reporting for a real store.
+- Keep this repository private if product names, sales figures, or inventory levels are commercially sensitive.
+
+## Limitations
+
+- The workflow is a daily report generator, not a real-time event stream.
+- Sales are based on the order totals returned by Shopify for the selected date.
+- Inventory is a current snapshot, not historical inventory at the report date.
+- Pagination is supported, while advanced segmentation and historical inventory tracking are outside the current scope.
 
 ---
-*Managed by OpenClaw & ClawForge*
+
+Maintained by **Khanzadi Wazir Ali** with **ClawForge**.
