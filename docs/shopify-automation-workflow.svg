@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Shopify Business Intelligence Automation workflow</title>
+  <desc id="desc">A workflow showing GitHub Actions triggering a Python report generator, reading Shopify orders and inventory, calculating metrics, optionally using aggregate AI analysis, and committing a Markdown report.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#3730a3"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#172033" flood-opacity=".12"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="760" rx="28" fill="url(#bg)"/>
+  <rect x="40" y="36" width="1320" height="128" rx="22" fill="url(#header)"/>
+  <text x="88" y="92" fill="#ffffff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="34" font-weight="700">Shopify Business Intelligence Automation</text>
+  <text x="88" y="130" fill="#c7d2fe" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">Read-only daily reporting with privacy-conscious metrics and optional aggregate AI analysis</text>
+  <rect x="1128" y="75" width="172" height="48" rx="24" fill="#a5f3fc"/>
+  <text x="1214" y="105" text-anchor="middle" fill="#164e63" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16" font-weight="700">READ-ONLY</text>
+
+  <!-- connectors first -->
+  <path d="M 254 310 H 340" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 562 310 H 648" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 870 310 H 956" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 1178 310 H 1254" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 759 396 V 504" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 1004 396 V 504" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 1115 570 H 1178" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- main nodes -->
+  <g filter="url(#shadow)">
+    <rect x="76" y="248" width="178" height="124" rx="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <rect x="340" y="248" width="222" height="124" rx="18" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+    <rect x="648" y="248" width="222" height="148" rx="18" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+    <rect x="956" y="248" width="222" height="148" rx="18" fill="#ccfbf1" stroke="#0f766e" stroke-width="2"/>
+    <rect x="1254" y="248" width="88" height="124" rx="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <rect x="622" y="504" width="262" height="132" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <rect x="922" y="504" width="262" height="132" rx="18" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  </g>
+
+  <!-- node labels -->
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" fill="#172033" text-anchor="middle">
+    <text x="165" y="289" font-size="20" font-weight="700">GitHub Actions</text>
+    <text x="165" y="319" font-size="15">Daily schedule</text>
+    <text x="165" y="345" font-size="15">or manual run</text>
+
+    <text x="451" y="289" font-size="20" font-weight="700">Python workflow</text>
+    <text x="451" y="319" font-size="15">Python 3.12</text>
+    <text x="451" y="345" font-size="15">CLI orchestration</text>
+
+    <text x="759" y="286" font-size="20" font-weight="700">Shopify API</text>
+    <text x="759" y="316" font-size="15">Admin GraphQL</text>
+    <text x="759" y="343" font-size="15">Orders + inventory</text>
+    <text x="759" y="370" font-size="15" font-weight="700">Read-only access</text>
+
+    <text x="1067" y="286" font-size="20" font-weight="700">Business metrics</text>
+    <text x="1067" y="316" font-size="15">Sales and orders</text>
+    <text x="1067" y="343" font-size="15">Top products</text>
+    <text x="1067" y="370" font-size="15">Low-stock alerts</text>
+
+    <text x="1298" y="298" font-size="17" font-weight="700">Report</text>
+    <text x="1298" y="326" font-size="14">Markdown</text>
+    <text x="1298" y="350" font-size="14">file</text>
+
+    <text x="753" y="545" font-size="19" font-weight="700">Deterministic analysis</text>
+    <text x="753" y="576" font-size="15">Safe default rules</text>
+    <text x="753" y="602" font-size="15">No external AI required</text>
+
+    <text x="1053" y="545" font-size="19" font-weight="700">Optional AI analysis</text>
+    <text x="1053" y="576" font-size="15">Aggregate metrics only</text>
+    <text x="1053" y="602" font-size="15">Falls back safely</text>
+  </g>
+
+  <!-- branch labels -->
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" fill="#475569" text-anchor="middle">
+    <text x="759" y="460" font-size="14" font-weight="700">DEFAULT</text>
+    <text x="1004" y="460" font-size="14" font-weight="700">OPTIONAL</text>
+  </g>
+
+  <!-- privacy banner -->
+  <rect x="76" y="680" width="1266" height="42" rx="21" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="709" y="707" text-anchor="middle" fill="#065f46" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16" font-weight="600">Privacy by design: aggregate business metrics only — no customer names, emails, addresses, or message content</text>
+</svg>

@@ -21,35 +21,15 @@ A read-only Shopify business intelligence workflow that generates a daily Markdo
 
 ## Architecture
 
-```text
-GitHub Actions schedule or manual run
-                |
-                v
-       Python 3.12 application
-                |
-                v
-  Shopify Admin GraphQL API (read-only)
-                |
-                +--> Orders for the report date
-                +--> Current product inventory
-                |
-                v
-       Metrics and business analysis
-                |
-                +--> Deterministic rules
-                +--> Optional aggregate AI analysis
-                |
-                v
-   shopify_reports/shopify-report-YYYY-MM-DD.md
-                |
-                v
-       Git commit and push by Actions
-```
+![Shopify Business Intelligence Automation workflow](docs/shopify-automation-workflow.svg)
+
+The diagram shows the complete flow from the GitHub Actions schedule to the generated Markdown report. Deterministic analysis is the default path; optional AI analysis receives aggregate metrics only and falls back safely if unavailable.
 
 ## Repository structure
 
 ```text
 .github/workflows/shopify-report.yml  # Scheduled and manual GitHub Actions workflow
+docs/shopify-automation-workflow.svg  # Repository workflow diagram
 shopify_automation/                   # Python package
   analyzer.py                         # Metrics and optional AI analysis
   config.py                           # Environment configuration
